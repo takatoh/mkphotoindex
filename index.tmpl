@@ -1,9 +1,16 @@
 <!DOCTYPE html>
 <html>
   <body>
-    <ul>
+    <ul style="list-style-type: none;">
       {{range .}}
-      <li>{{.}}</li>
+      <li>
+        <figure style="float: left;">
+          <a href="{{.File}}" target="_blank">
+            <img src="{{.Thumb}}" width="320" />
+          </a>
+          <figcaption>{{.Caption}}</figcaption>
+        </figure>
+      </li>
       {{end}}
     </ul>
   </body>
