@@ -14,7 +14,7 @@ import (
 func main() {
 	var photos []*Photo
 
-	pattern := os.Args[1]
+	pattern := "*.jpg"
 	filenames, _ := filepath.Glob(pattern)
 
 	t := template.Must(template.ParseFiles("index.tmpl"))
