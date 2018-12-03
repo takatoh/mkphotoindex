@@ -16,6 +16,10 @@ func main() {
 
 	pattern := "*.jpg"
 	filenames, _ := filepath.Glob(pattern)
+	thumbsDir := "thumbs"
+	if _, err := os.Stat(thumbsDir); os.IsNotExist(err) {
+		os.Mkdir(thumbsDir, 0777)
+	}
 
 	t := template.Must(template.ParseFiles("index.tmpl"))
 	w, err := os.OpenFile("index.html", os.O_WRONLY|os.O_CREATE, 0600)
