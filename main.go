@@ -8,6 +8,8 @@ import (
 )
 
 func main() {
+	var photos []*Photo
+
 	pattern := os.Args[1]
 	filenames, _ := filepath.Glob(pattern)
 
@@ -17,9 +19,26 @@ func main() {
 		fmt.Println(err)
 	}
 
+	for _, filename := range filenames {
+		photos = append(photos, newPhoto(filename, filename, filename))
+	}
 
-	err = t.ExecuteTemplate(w, "index.tmpl", filenames)
+	err = t.ExecuteTemplate(w, "index.tmpl", photos)
 	if err != nil {
 		panic(err)
 	}
+}
+
+type Photo struct {
+	File    string
+	Thumb   string
+	Caption string
+}
+
+func newPhoto(file, thumb, caption string) *Photo {
+	p := new(Photo)
+	p.File = file
+	p.Thumb = thumb
+	p.Caption = caption
+	return p
 }
