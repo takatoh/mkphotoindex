@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	progVersion = "v0.1.0"
+	progVersion = "v0.2.0"
 	tmpl = `<!DOCTYPE html>
 <html>
   <head>
