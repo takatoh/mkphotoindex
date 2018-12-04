@@ -15,6 +15,29 @@ import (
 
 const (
 	progVersion = "v0.1.0"
+	tmpl = `<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Index of photos</title>
+  </head>
+  <body>
+    <h1>Index of photos</h1>
+    <ul style="list-style-type: none;">
+      {{range .}}
+      <li>
+        <figure style="float: left;">
+          <a href="{{.File}}" target="_blank">
+            <img src="{{.Thumb}}" />
+          </a>
+          <figcaption>{{.Caption}}</figcaption>
+        </figure>
+      </li>
+      {{end}}
+    </ul>
+  </body>
+</html>
+`
 )
 
 func main() {
@@ -42,7 +65,7 @@ func main() {
 		os.Mkdir(thumbsDir, 0777)
 	}
 
-	t := template.Must(template.ParseFiles("index.tmpl"))
+	t, _ := template.New("index").Parse(tmpl)
 	w, err := os.OpenFile("index.html", os.O_WRONLY|os.O_CREATE, 0600)
 	if err != nil {
 		fmt.Println(err)
@@ -53,7 +76,7 @@ func main() {
 		photos = append(photos, newPhoto(imgFile, thumb, imgFile))
 	}
 
-	err = t.ExecuteTemplate(w, "index.tmpl", photos)
+	err = t.ExecuteTemplate(w, "index", photos)
 	if err != nil {
 		panic(err)
 	}
