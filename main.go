@@ -2,20 +2,29 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"path/filepath"
 	"html/template"
 	"image"
 	"image/jpeg"
+	"os"
+	"path"
+	"path/filepath"
+	"strings"
 
 	"github.com/nfnt/resize"
 )
 
 func main() {
 	var photos []*Photo
+	var imgFiles []string
 
-	pattern := "*.jpg"
+	pattern := "*.*"
 	filenames, _ := filepath.Glob(pattern)
+	for _, f := range filenames {
+		ext := path.Ext(f)
+		if strings.ToLower(ext) == ".jpg" {
+			imgFiles = append(imgFiles, f)
+		}
+	}
 	thumbsDir := "thumbs"
 	if _, err := os.Stat(thumbsDir); os.IsNotExist(err) {
 		os.Mkdir(thumbsDir, 0777)
@@ -27,9 +36,9 @@ func main() {
 		fmt.Println(err)
 	}
 
-	for _, filename := range filenames {
-		thumb := makeThumbnail(filename)
-		photos = append(photos, newPhoto(filename, thumb, filename))
+	for _, imgFile := range imgFiles {
+		thumb := makeThumbnail(imgFile)
+		photos = append(photos, newPhoto(imgFile, thumb, imgFile))
 	}
 
 	err = t.ExecuteTemplate(w, "index.tmpl", photos)
