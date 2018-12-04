@@ -6,7 +6,6 @@ import (
 	"image"
 	"image/jpeg"
 	"os"
-	"path"
 	"path/filepath"
 	"strings"
 
@@ -20,7 +19,7 @@ func main() {
 	pattern := "*.*"
 	filenames, _ := filepath.Glob(pattern)
 	for _, f := range filenames {
-		ext := path.Ext(f)
+		ext := filepath.Ext(f)
 		if strings.ToLower(ext) == ".jpg" {
 			imgFiles = append(imgFiles, f)
 		}
