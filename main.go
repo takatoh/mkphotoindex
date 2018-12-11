@@ -118,7 +118,8 @@ func makeThumbnail(srcfile string) string {
 	} else {
 		resizedImg = resize.Resize(0, 320, img, resize.Lanczos3)
 	}
-	thumbFile := "thumbs/thumb_" + srcfile
+	filename := filepath.Base(srcfile)
+	thumbFile := "thumbs/thumb_" + filename
 	thumb, _ := os.Create(thumbFile)
 	jpeg.Encode(thumb, resizedImg, nil)
 	thumb.Close()
