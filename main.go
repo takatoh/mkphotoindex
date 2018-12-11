@@ -96,8 +96,7 @@ func main() {
 	}
 
 	for _, imgFile := range imgFiles {
-		thumb := makeThumbnail(imgFile, thumbsDir)
-		fmt.Println(thumb)
+		thumb := makeThumbnail(imgFile, dir)
 		photos = append(photos, newPhoto(imgFile, thumb, imgFile))
 	}
 
@@ -137,14 +136,14 @@ func makeThumbnail(srcfile, dir string) string {
 	}
 	filename := filepath.Base(srcfile)
 	var thumbFile string
-	if dir == "" {
-		thumbFile = "thumb_" + filename
+	if dir != "" {
+		thumbFile = dir + "/thumbs/thumb_" + filename
 	} else {
-		thumbFile = dir + "/thumb_" + filename
+		thumbFile = "thumbs/thumb_" + filename
 	}
 	thumb, _ := os.Create(thumbFile)
 	jpeg.Encode(thumb, resizedImg, nil)
 	thumb.Close()
 
-	return thumbFile
+	return "thumbs/thumb_" + filename
 }
