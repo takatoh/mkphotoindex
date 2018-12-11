@@ -41,6 +41,15 @@ const (
 )
 
 func main() {
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr,
+`Usage:
+  %s [options] [photo_dir]
+
+Options:
+`, os.Args[0])
+		flag.PrintDefaults()
+	}
 	opt_version := flag.Bool("version", false, "Show version")
 	flag.Parse()
 
