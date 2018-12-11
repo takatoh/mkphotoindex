@@ -51,8 +51,15 @@ func main() {
 
 	var photos []*Photo
 	var imgFiles []string
+	var pattern string
 
-	pattern := "*.*"
+	if flag.NArg() > 0 {
+		pattern = flag.Arg(0) + "/*.*"
+	} else {
+		pattern = "*.*"
+	}
+
+//	pattern := "*.*"
 	filenames, _ := filepath.Glob(pattern)
 	for _, f := range filenames {
 		ext := filepath.Ext(f)
@@ -73,6 +80,7 @@ func main() {
 
 	for _, imgFile := range imgFiles {
 		thumb := makeThumbnail(imgFile)
+		fmt.Println(thumb)
 		photos = append(photos, newPhoto(imgFile, thumb, imgFile))
 	}
 
