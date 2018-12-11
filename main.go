@@ -97,7 +97,8 @@ func main() {
 
 	for _, imgFile := range imgFiles {
 		thumb := makeThumbnail(imgFile, dir)
-		photos = append(photos, newPhoto(imgFile, thumb, imgFile))
+		filename := filepath.Base(imgFile)
+		photos = append(photos, newPhoto(filename, thumb, filename))
 	}
 
 	err = t.ExecuteTemplate(w, "index", photos)
