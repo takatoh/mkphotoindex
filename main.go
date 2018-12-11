@@ -54,6 +54,7 @@ func main() {
 	var dir string
 	var pattern string
 	var thumbsDir string
+	var indexFile string
 
 	if flag.NArg() > 0 {
 		dir = flag.Arg(0)
@@ -83,8 +84,13 @@ func main() {
 		os.Mkdir(thumbsDir, 0777)
 	}
 
+	if dir != "" {
+		indexFile = dir + "/index.html"
+	} else {
+		indexFile = "index.html"
+	}
 	t, _ := template.New("index").Parse(tmpl)
-	w, err := os.OpenFile("index.html", os.O_WRONLY|os.O_CREATE, 0600)
+	w, err := os.OpenFile(indexFile, os.O_WRONLY|os.O_CREATE, 0600)
 	if err != nil {
 		fmt.Println(err)
 	}
