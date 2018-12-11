@@ -51,15 +51,22 @@ func main() {
 
 	var photos []*Photo
 	var imgFiles []string
+	var dir string
 	var pattern string
+	var thumbsDir string
 
 	if flag.NArg() > 0 {
-		pattern = flag.Arg(0) + "/*.*"
+		dir = flag.Arg(0)
+	} else {
+		dir = ""
+	}
+
+	if dir != "" {
+		pattern = dir + "/*.*"
 	} else {
 		pattern = "*.*"
 	}
 
-//	pattern := "*.*"
 	filenames, _ := filepath.Glob(pattern)
 	for _, f := range filenames {
 		ext := filepath.Ext(f)
@@ -67,7 +74,11 @@ func main() {
 			imgFiles = append(imgFiles, f)
 		}
 	}
-	thumbsDir := "thumbs"
+	if dir != "" {
+		thumbsDir = dir + "/thumbs"
+	} else {
+		thumbsDir = "thumbs"
+	}
 	if _, err := os.Stat(thumbsDir); os.IsNotExist(err) {
 		os.Mkdir(thumbsDir, 0777)
 	}
@@ -79,7 +90,7 @@ func main() {
 	}
 
 	for _, imgFile := range imgFiles {
-		thumb := makeThumbnail(imgFile)
+		thumb := makeThumbnail(imgFile, thumbsDir)
 		fmt.Println(thumb)
 		photos = append(photos, newPhoto(imgFile, thumb, imgFile))
 	}
@@ -104,7 +115,7 @@ func newPhoto(file, thumb, caption string) *Photo {
 	return p
 }
 
-func makeThumbnail(srcfile string) string {
+func makeThumbnail(srcfile, dir string) string {
 	src, _ := os.Open(srcfile)
 	defer src.Close()
 
@@ -119,7 +130,12 @@ func makeThumbnail(srcfile string) string {
 		resizedImg = resize.Resize(0, 320, img, resize.Lanczos3)
 	}
 	filename := filepath.Base(srcfile)
-	thumbFile := "thumbs/thumb_" + filename
+	var thumbFile string
+	if dir == "" {
+		thumbFile = "thumb_" + filename
+	} else {
+		thumbFile = dir + "/thumb_" + filename
+	}
 	thumb, _ := os.Create(thumbFile)
 	jpeg.Encode(thumb, resizedImg, nil)
 	thumb.Close()
