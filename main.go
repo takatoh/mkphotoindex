@@ -111,7 +111,7 @@ Options:
 	for _, imgFile := range imgFiles {
 		thumb := makeThumbnail(imgFile, dir)
 		filename := filepath.Base(imgFile)
-		photos = append(photos, newPhoto(filename, thumb, filename, *opt_shiftjis))
+		photos = append(photos, newPhoto(filename, thumb, filename))
 	}
 
 	err = t.ExecuteTemplate(w, "index", photos)
@@ -126,14 +126,8 @@ type Photo struct {
 	Caption string
 }
 
-func newPhoto(file, thumb, caption string, isShiftJIS bool) *Photo {
+func newPhoto(file, thumb, caption string) *Photo {
 	p := new(Photo)
-	if isShiftJIS {
-		file = encodeShiftJIS(file)
-		thumb = encodeShiftJIS(thumb)
-//		caption = decodeShiftJIS(caption)
-	}
-	fmt.Printf("%s, %s\n", file, thumb)
 	p.File = file
 	p.Thumb = thumb
 	p.Caption = caption
@@ -166,21 +160,4 @@ func makeThumbnail(srcfile, dir string) string {
 	thumb.Close()
 
 	return "thumbs/thumb_" + filename
-}
-
-func decodeShiftJIS(j string) string {
-	r := strings.NewReader(j)
-	s := bufio.NewScanner(transform.NewReader(r, japanese.ShiftJIS.NewDecoder()))
-	list := make([]string, 0)
-	for s.Scan() {
-		list = append(list, s.Text())
-	}
-	return strings.Join(list, "")
-}
-
-func encodeShiftJIS(u string) string {
-	r := strings.NewReader(u)
-	tio := transform.NewReader(r, japanese.ShiftJIS.NewEncoder())
-	ret, _ := ioutil.ReadAll(tio)
-	return string(ret)
 }
