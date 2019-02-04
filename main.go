@@ -52,6 +52,7 @@ Options:
 `, os.Args[0])
 		flag.PrintDefaults()
 	}
+	opt_shift_jis := flag.Bool("shiftjis", false, "ShiftJIS file names")
 	opt_version := flag.Bool("version", false, "Show version")
 	flag.Parse()
 
