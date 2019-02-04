@@ -9,6 +9,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"bufio"
+	"ioutil"
 
 	"github.com/nfnt/resize"
 	"golang.org/x/text/encoding/japanese"
@@ -52,7 +54,7 @@ Options:
 `, os.Args[0])
 		flag.PrintDefaults()
 	}
-	opt_shift_jis := flag.Bool("shiftjis", false, "ShiftJIS file names")
+	opt_shiftjis := flag.Bool("shiftjis", false, "ShiftJIS file names")
 	opt_version := flag.Bool("version", false, "Show version")
 	flag.Parse()
 
@@ -110,7 +112,7 @@ Options:
 	for _, imgFile := range imgFiles {
 		thumb := makeThumbnail(imgFile, dir)
 		filename := filepath.Base(imgFile)
-		photos = append(photos, newPhoto(filename, thumb, filename))
+		photos = append(photos, newPhoto(filename, thumb, filename, *opt_shiftjis))
 	}
 
 	err = t.ExecuteTemplate(w, "index", photos)
@@ -130,8 +132,9 @@ func newPhoto(file, thumb, caption string, isShiftJIS bool) *Photo {
 	if isShiftJIS {
 		file = decodeShiftJIS(file)
 		thumb = decodeShiftJIS(thumb)
-		caption = decodeShiftJIS(caption)
+//		caption = decodeShiftJIS(caption)
 	}
+	fmt.Printf("%s, %s\n", file, thumb)
 	p.File = file
 	p.Thumb = thumb
 	p.Caption = caption
@@ -166,12 +169,19 @@ func makeThumbnail(srcfile, dir string) string {
 	return "thumbs/thumb_" + filename
 }
 
-func decodeShiftJIS(s string) string {
-	r := strings.NewReader(s)
+func decodeShiftJIS(j string) string {
+	r := strings.NewReader(j)
 	s := bufio.NewScanner(transform.NewReader(r, japanese.ShiftJIS.NewDecoder()))
 	list := make([]string, 0)
 	for s.Scan() {
 		list = append(list, s.Text())
 	}
 	return strings.Join(list, "")
+}
+
+func encodeShiftJIS(u string) string {
+	r := strings.NewReader(u)
+	tio := transform.NewReader(r, japanese.ShiftJIS.NewEncoder())
+	ret := ioutil.ReadAll(tio)
+	return string(ret)
 }
