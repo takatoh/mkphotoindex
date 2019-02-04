@@ -6,6 +6,7 @@ import (
 	"text/template"
 	"image"
 	"image/jpeg"
+	_ "image/png"
 	"os"
 	"path/filepath"
 	"strings"
@@ -64,6 +65,7 @@ Options:
 	var pattern string
 	var thumbsDir string
 	var indexFile string
+	var photoTypes []string = []string{ ".jpg", ".jpeg", ".png", }
 
 	if flag.NArg() > 0 {
 		dir = flag.Arg(0)
@@ -80,7 +82,7 @@ Options:
 	filenames, _ := filepath.Glob(pattern)
 	for _, f := range filenames {
 		ext := filepath.Ext(f)
-		if strings.ToLower(ext) == ".jpg" {
+		if contains(photoTypes, strings.ToLower(ext)) {
 			imgFiles = append(imgFiles, f)
 		}
 	}
@@ -158,4 +160,13 @@ func makeThumbnail(srcfile, dir string) string {
 	thumb.Close()
 
 	return "thumbs/thumb_" + filename
+}
+
+func contains(s []string, e string) bool {
+	for _, v := range s {
+		if v == e {
+			return true
+		}
+	}
+	return false
 }
