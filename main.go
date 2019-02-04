@@ -107,7 +107,9 @@ Options:
 	for _, imgFile := range imgFiles {
 		thumb := makeThumbnail(imgFile, dir)
 		filename := filepath.Base(imgFile)
-		photos = append(photos, newPhoto(filename, thumb, filename))
+		ext := filepath.Ext(filename)
+		caption := strings.Replace(filename, ext, "", 1)
+		photos = append(photos, newPhoto(filename, thumb, caption))
 	}
 
 	err = t.ExecuteTemplate(w, "index", photos)
