@@ -11,6 +11,8 @@ import (
 	"strings"
 
 	"github.com/nfnt/resize"
+	"golang.org/x/text/encoding/japanese"
+	"golang.org/x/text/ransform"
 )
 
 const (
@@ -156,4 +158,14 @@ func makeThumbnail(srcfile, dir string) string {
 	thumb.Close()
 
 	return "thumbs/thumb_" + filename
+}
+
+func decodeShiftJIS(s string) string {
+	r := strings.NewReader(s)
+	s := bufio.NewScanner(transform.NewReader(r, japanese.ShiftJIS.NewDecoder()))
+	list := make([]string, 0)
+	for s.Scan() {
+		list = append(list, s.Text())
+	}
+	return strings.Join(list, "")
 }
