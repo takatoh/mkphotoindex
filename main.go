@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 	"bufio"
-	"ioutil"
+	"io/ioutil"
 
 	"github.com/nfnt/resize"
 	"golang.org/x/text/encoding/japanese"
@@ -130,8 +130,8 @@ type Photo struct {
 func newPhoto(file, thumb, caption string, isShiftJIS bool) *Photo {
 	p := new(Photo)
 	if isShiftJIS {
-		file = decodeShiftJIS(file)
-		thumb = decodeShiftJIS(thumb)
+		file = encodeShiftJIS(file)
+		thumb = encodeShiftJIS(thumb)
 //		caption = decodeShiftJIS(caption)
 	}
 	fmt.Printf("%s, %s\n", file, thumb)
@@ -182,6 +182,6 @@ func decodeShiftJIS(j string) string {
 func encodeShiftJIS(u string) string {
 	r := strings.NewReader(u)
 	tio := transform.NewReader(r, japanese.ShiftJIS.NewEncoder())
-	ret := ioutil.ReadAll(tio)
+	ret, _ := ioutil.ReadAll(tio)
 	return string(ret)
 }
