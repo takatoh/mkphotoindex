@@ -9,12 +9,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"bufio"
-	"io/ioutil"
 
 	"github.com/nfnt/resize"
-	"golang.org/x/text/encoding/japanese"
-	"golang.org/x/text/transform"
 )
 
 const (
