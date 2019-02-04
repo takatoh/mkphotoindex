@@ -124,8 +124,13 @@ type Photo struct {
 	Caption string
 }
 
-func newPhoto(file, thumb, caption string) *Photo {
+func newPhoto(file, thumb, caption string, isShiftJIS bool) *Photo {
 	p := new(Photo)
+	if isShiftJIS {
+		file = decodeShiftJIS(file)
+		thumb = decodeShiftJIS(thumb)
+		caption = decodeShiftJIS(caption)
+	}
 	p.File = file
 	p.Thumb = thumb
 	p.Caption = caption
