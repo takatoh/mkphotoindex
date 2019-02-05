@@ -6,7 +6,7 @@ import (
 	"text/template"
 	"image"
 	"image/jpeg"
-	_ "image/png"
+	"image/png"
 	"os"
 	"path/filepath"
 	"strings"
@@ -156,7 +156,12 @@ func makeThumbnail(srcfile, dir string) string {
 		thumbFile = "thumbs/thumb_" + filename
 	}
 	thumb, _ := os.Create(thumbFile)
-	jpeg.Encode(thumb, resizedImg, nil)
+	ext := strings.ToLower(filepath.Ext(filename))
+	if ext == ".jpg" || ext == ".jpeg" {
+		jpeg.Encode(thumb, resizedImg, nil)
+	} else {
+		png.Encode(thumb, resizedImg)
+	}
 	thumb.Close()
 
 	return "thumbs/thumb_" + filename
