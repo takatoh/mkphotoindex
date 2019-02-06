@@ -51,6 +51,7 @@ Options:
 `, os.Args[0])
 		flag.PrintDefaults()
 	}
+	opt_size := flag.Int("size", 320, "Specify thubnail size")
 	opt_version := flag.Bool("version", false, "Show version")
 	flag.Parse()
 
