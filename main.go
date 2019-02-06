@@ -51,7 +51,7 @@ Options:
 `, os.Args[0])
 		flag.PrintDefaults()
 	}
-	opt_size := flag.Int("size", 320, "Specify thubnail size")
+	opt_size := flag.Uint("size", 320, "Specify thubnail size")
 	opt_version := flag.Bool("version", false, "Show version")
 	flag.Parse()
 
@@ -108,7 +108,7 @@ Options:
 	}
 
 	for _, imgFile := range imgFiles {
-		thumb := makeThumbnail(imgFile, dir)
+		thumb := makeThumbnail(imgFile, dir, *opt_size)
 		filename := filepath.Base(imgFile)
 		ext := filepath.Ext(filename)
 		caption := strings.Replace(filename, ext, "", 1)
@@ -135,7 +135,7 @@ func newPhoto(file, thumb, caption string) *Photo {
 	return p
 }
 
-func makeThumbnail(srcfile, dir string) string {
+func makeThumbnail(srcfile, dir string, size uint) string {
 	src, _ := os.Open(srcfile)
 	defer src.Close()
 
@@ -145,9 +145,9 @@ func makeThumbnail(srcfile, dir string) string {
 
 	var resizedImg image.Image
 	if config.Width >= config.Height {
-		resizedImg = resize.Resize(320, 0, img, resize.Lanczos3)
+		resizedImg = resize.Resize(size, 0, img, resize.Lanczos3)
 	} else {
-		resizedImg = resize.Resize(0, 320, img, resize.Lanczos3)
+		resizedImg = resize.Resize(0, size, img, resize.Lanczos3)
 	}
 	filename := filepath.Base(srcfile)
 	var thumbFile string
