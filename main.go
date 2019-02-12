@@ -28,9 +28,11 @@ const (
       {{range .}}
       <li>
         <figure style="float: left;">
-          <a href="{{.File}}" target="_blank">
-            <img src="{{.Thumb}}" />
-          </a>
+          <div style="width: 320px; height: 320px">
+            <a href="{{.File}}" target="_blank">
+              <img src="{{.Thumb}}" />
+            </a>
+          </div>
           <figcaption>{{.Caption}}</figcaption>
         </figure>
       </li>
