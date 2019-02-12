@@ -21,14 +21,17 @@ const (
   <head>
     <meta charset="utf-8" />
     <title>Index of photos</title>
+    <style>
+      div.photo {width: {{.Size}}px; height: {{.Size}}px;}
+    </style>
   </head>
   <body>
     <h1>Index of photos</h1>
     <ul style="list-style-type: none;">
-      {{range .}}
+      {{range .Photos}}
       <li>
         <figure style="float: left;">
-          <div style="width: 320px; height: 320px">
+          <div class="photo">
             <a href="{{.File}}" target="_blank">
               <img src="{{.Thumb}}" />
             </a>
@@ -117,7 +120,9 @@ Options:
 		photos = append(photos, newPhoto(filename, thumb, caption))
 	}
 
-	err = t.ExecuteTemplate(w, "index", photos)
+	photoSet := newPhotoSet(photos, *opt_size)
+
+	err = t.ExecuteTemplate(w, "index", photoSet)
 	if err != nil {
 		panic(err)
 	}
@@ -145,7 +150,7 @@ type PhotoSet struct {
 func newPhotoSet(photos []*Photo, size uint) *PhotoSet {
 	p := new(PhotoSet)
 	p.Photos = photos
-	p.size = size
+	p.Size = size
 	return p
 }
 
