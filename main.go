@@ -137,6 +137,18 @@ func newPhoto(file, thumb, caption string) *Photo {
 	return p
 }
 
+type PhotoSet struct {
+	Photos []*Photo
+	Size   uint
+}
+
+func newPhotoSet(photos []*Photo, size uint) *PhotoSet {
+	p := new(PhotoSet)
+	p.Photos = photos
+	p.size = size
+	return p
+}
+
 func makeThumbnail(srcfile, dir string, size uint) string {
 	src, _ := os.Open(srcfile)
 	defer src.Close()
