@@ -22,15 +22,17 @@ const (
     <meta charset="utf-8" />
     <title>Index of photos</title>
     <style>
+      ul {list-style-type: none;}
+      figure {float: left;}
       div.photo {width: {{.Size}}px; height: {{.Size}}px;}
     </style>
   </head>
   <body>
     <h1>Index of photos</h1>
-    <ul style="list-style-type: none;">
+    <ul>
       {{range .Photos}}
       <li>
-        <figure style="float: left;">
+        <figure>
           <div class="photo">
             <a href="{{.File}}" target="_blank">
               <img src="{{.Thumb}}" />
