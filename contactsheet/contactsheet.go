@@ -14,6 +14,11 @@ import (
 const (
 	defaultCols = 4
 	defaultRows = 6
+	marginLeft  = 60.0
+	marginTop   = 65.0
+	strideX     = 128.0
+	strideY     = 122.0
+	captionY    = 95.0
 )
 
 func Generate(imageFiles *core.PhotoSet, thumbsDir string) {
@@ -38,11 +43,6 @@ func Generate(imageFiles *core.PhotoSet, thumbsDir string) {
 	drawText(&pdf, 60, 25, "Index of photos")
 
 	// Drow images
-	marginLeft := 60.0
-	marginTop := 65.0
-	strideX := 128.0
-	strideY := 122.0
-	captionY := 95.0
 	pages, totalPage := paginate(imageFiles.Photos, defaultRows*defaultCols)
 	for j, page := range pages {
 		for i, img := range page {
