@@ -3,20 +3,22 @@ package main
 import (
 	"flag"
 	"fmt"
-	"text/template"
 	"image"
 	"image/jpeg"
 	"image/png"
 	"os"
 	"path/filepath"
 	"strings"
+	"text/template"
 
 	"github.com/nfnt/resize"
+
+	"github.com/takatoh/mkphotoindex/core"
 )
 
 const (
 	progVersion = "v0.5.2"
-	tmpl = `<!DOCTYPE html>
+	tmpl        = `<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8" />
@@ -51,7 +53,7 @@ const (
 func main() {
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr,
-`Usage:
+			`Usage:
   %s [options] [photo_dir]
 
 Options:
@@ -67,13 +69,13 @@ Options:
 		os.Exit(0)
 	}
 
-	var photos []*Photo
+	var photos []*core.Photo
 	var imgFiles []string
 	var dir string
 	var pattern string
 	var thumbsDir string
 	var indexFile string
-	var photoTypes []string = []string{ ".jpg", ".jpeg", ".png", }
+	var photoTypes []string = []string{".jpg", ".jpeg", ".png"}
 
 	if flag.NArg() > 0 {
 		dir = flag.Arg(0)
@@ -119,10 +121,10 @@ Options:
 		filename := filepath.Base(imgFile)
 		ext := filepath.Ext(filename)
 		caption := strings.Replace(filename, ext, "", 1)
-		photos = append(photos, newPhoto(filename, thumb, caption))
+		photos = append(photos, core.NewPhoto(filename, thumb, caption))
 	}
 
-	photoSet := newPhotoSet(photos, *opt_size)
+	photoSet := core.NewPhotoSet(photos, *opt_size)
 
 	err = t.ExecuteTemplate(w, "index", photoSet)
 	if err != nil {
@@ -130,31 +132,31 @@ Options:
 	}
 }
 
-type Photo struct {
-	File    string
-	Thumb   string
-	Caption string
-}
+//type Photo struct {
+//	File    string
+//	Thumb   string
+//	Caption string
+//}
 
-func newPhoto(file, thumb, caption string) *Photo {
-	p := new(Photo)
-	p.File = file
-	p.Thumb = thumb
-	p.Caption = caption
-	return p
-}
+//func newPhoto(file, thumb, caption string) *Photo {
+//	p := new(Photo)
+//	p.File = file
+//	p.Thumb = thumb
+//	p.Caption = caption
+//	return p
+//}
 
-type PhotoSet struct {
-	Photos []*Photo
-	Size   uint
-}
+//type PhotoSet struct {
+//	Photos []*Photo
+//	Size   uint
+//}
 
-func newPhotoSet(photos []*Photo, size uint) *PhotoSet {
-	p := new(PhotoSet)
-	p.Photos = photos
-	p.Size = size
-	return p
-}
+//func newPhotoSet(photos []*Photo, size uint) *PhotoSet {
+//	p := new(PhotoSet)
+//	p.Photos = photos
+//	p.Size = size
+//	return p
+//}
 
 func makeThumbnail(srcfile, dir string, size uint) string {
 	src, _ := os.Open(srcfile)
