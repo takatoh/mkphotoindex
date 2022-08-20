@@ -79,7 +79,7 @@ Options:
 		fmt.Println(err)
 	}
 
-	photoSet := thumbnail.MakeThumbnails(imgFiles, dir, *opt_size)
+	photoSet := thumbnail.MakeThumbnails(imgFiles, thumbsDir, *opt_size)
 
 	err = html.MakeIndex(w, photoSet)
 	if err != nil {
