@@ -60,21 +60,8 @@ Options:
 			imgFiles = append(imgFiles, f)
 		}
 	}
-	//	if dir != "" {
-	//		thumbsDir = dir + "/thumbs"
-	//	} else {
-	//		thumbsDir = "thumbs"
-	//	}
-	//	if _, err := os.Stat(thumbsDir); os.IsNotExist(err) {
-	//		os.Mkdir(thumbsDir, 0777)
-	//	}
 	thumbsDir = thumbnail.MakeDirectory(dir)
 
-	//	if dir != "" {
-	//		indexFile = dir + "/index.html"
-	//	} else {
-	//		indexFile = "index.html"
-	//	}
 	indexFile = html.IndexFilePath(dir)
 	w, err := os.OpenFile(indexFile, os.O_WRONLY|os.O_CREATE, 0600)
 	if err != nil {
