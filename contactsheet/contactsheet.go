@@ -3,11 +3,17 @@ package contactsheet
 import (
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/signintech/gopdf"
 
 	"github.com/takatoh/mkphotoindex/core"
+)
+
+const (
+	defaultCols = 3
+	defaultRows = 4
 )
 
 func Generate(imageFiles *core.PhotoSet, thumbsDir string) {
@@ -32,14 +38,22 @@ func Generate(imageFiles *core.PhotoSet, thumbsDir string) {
 	drawText(&pdf, 100, 25, "Index of photos")
 
 	// Drow images
-	for i, img := range imageFiles.Photos {
-		x := 100.0 + 150.0*float64(i%3)
-		y := 80.0 + 150.0*float64((i/3))
-		thumb := strings.Replace(img.Thumb, "thumbs", thumbsDir, 1)
-		drawImage(&pdf, x, y, thumb)
-		pdf.SetFont("IPAex", "", 10)
-		basename := filepath.Base(img.File)
-		drawText(&pdf, x, y+120.0, basename)
+	pages, totalPage := paginate(imageFiles.Photos, defaultRows*defaultCols)
+	for j, page := range pages {
+		for i, img := range page {
+			x := 100.0 + 150.0*float64(i%defaultCols)
+			y := 80.0 + 150.0*float64((i/defaultCols))
+			thumb := strings.Replace(img.Thumb, "thumbs", thumbsDir, 1)
+			drawImage(&pdf, x, y, thumb)
+			pdf.SetFont("IPAex", "", 10)
+			basename := filepath.Base(img.File)
+			drawText(&pdf, x, y+120.0, basename)
+		}
+		pdf.SetFont("IPAex", "", 12)
+		drawText(&pdf, 265, 800, "page "+strconv.Itoa(j+1)+" of "+strconv.Itoa(totalPage))
+		if j < totalPage-1 {
+			pdf.AddPage()
+		}
 	}
 
 	// Write PDF
@@ -64,7 +78,7 @@ func drawGrid(pdf *gopdf.GoPdf, page *gopdf.Rect) {
 			pdf.SetLineWidth(0.8)
 			pdf.SetStrokeColor(50, 50, 100)
 		} else {
-			pdf.SetLineWidth(0.3)
+			pdf.SetLineWidth(0.2)
 			pdf.SetStrokeColor(100, 100, 130)
 		}
 		x, y := float64(i)*ww, float64(i)*ww
@@ -86,4 +100,23 @@ func MakeDirectory(baseDir string) string {
 	}
 
 	return thumbsDir
+}
+
+func paginate(photos []*core.Photo, parPage int) ([][]*core.Photo, int) {
+	var pages [][]*core.Photo
+
+	numOfPhotos := len(photos)
+	totalPage := numOfPhotos / parPage
+	if numOfPhotos%parPage != 0 {
+		totalPage = totalPage + 1
+	}
+	for i := 0; i < numOfPhotos; i = i + parPage {
+		if i+parPage < numOfPhotos {
+			pages = append(pages, photos[i:i+parPage])
+		} else {
+			pages = append(pages, photos[i:numOfPhotos])
+		}
+	}
+
+	return pages, totalPage
 }
