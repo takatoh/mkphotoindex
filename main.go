@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/takatoh/mkphotoindex/contactsheet"
+	"github.com/takatoh/mkphotoindex/core"
 	"github.com/takatoh/mkphotoindex/html"
 	"github.com/takatoh/mkphotoindex/thumbnail"
 )
@@ -42,6 +43,7 @@ Options:
 	var thumbsDir string
 	var indexFile string
 	var photoTypes []string = []string{".jpg", ".jpeg", ".png"}
+	var photoSet *core.PhotoSet
 
 	if flag.NArg() > 0 {
 		dir = flag.Arg(0)
@@ -51,11 +53,6 @@ Options:
 		pattern = "*.*"
 	}
 
-	if *opt_csheet {
-		contactsheet.Generate()
-		os.Exit(0)
-	}
-
 	filenames, _ := filepath.Glob(pattern)
 	for _, f := range filenames {
 		ext := filepath.Ext(f)
@@ -63,6 +60,14 @@ Options:
 			imgFiles = append(imgFiles, f)
 		}
 	}
+
+	if *opt_csheet {
+		thumbsDir = contactsheet.MakeDirectory(dir)
+		photoSet = thumbnail.MakeThumbnails(imgFiles, thumbsDir, 240)
+		contactsheet.Generate(photoSet, thumbsDir)
+		os.Exit(0)
+	}
+
 	thumbsDir = thumbnail.MakeDirectory(dir)
 
 	indexFile = html.IndexFilePath(dir)
@@ -71,7 +76,7 @@ Options:
 		fmt.Println(err)
 	}
 
-	photoSet := thumbnail.MakeThumbnails(imgFiles, thumbsDir, *opt_size)
+	photoSet = thumbnail.MakeThumbnails(imgFiles, thumbsDir, *opt_size)
 
 	err = html.MakeIndex(w, photoSet)
 	if err != nil {
