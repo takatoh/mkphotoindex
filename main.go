@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/takatoh/mkphotoindex/contactsheet"
 	"github.com/takatoh/mkphotoindex/html"
 	"github.com/takatoh/mkphotoindex/thumbnail"
 )
@@ -26,6 +27,7 @@ Options:
 		flag.PrintDefaults()
 	}
 	opt_size := flag.Uint("size", 320, "Specify thubnail size")
+	opt_csheet := flag.Bool("contact-sheet", false, "Genarete contact sheet, instead")
 	opt_version := flag.Bool("version", false, "Show version")
 	flag.Parse()
 
@@ -47,6 +49,11 @@ Options:
 	} else {
 		dir = ""
 		pattern = "*.*"
+	}
+
+	if *opt_csheet {
+		contactsheet.Generate()
+		os.Exit(0)
 	}
 
 	filenames, _ := filepath.Glob(pattern)
