@@ -29,6 +29,7 @@ Options:
 	}
 	opt_size := flag.Uint("size", 320, "Specify thubnail size")
 	opt_csheet := flag.Bool("contact-sheet", false, "Genarete contact sheet, instead")
+	opt_title := flag.String("title", "", "Specify title")
 	opt_version := flag.Bool("version", false, "Show version")
 	flag.Parse()
 
@@ -62,9 +63,15 @@ Options:
 	}
 
 	if *opt_csheet {
+		var title string
+		if *opt_title != "" {
+			title = *opt_title
+		} else {
+			title = dir
+		}
 		thumbsDir = contactsheet.MakeDirectory(dir)
 		photoSet = thumbnail.MakeThumbnails(imgFiles, thumbsDir, 200)
-		contactsheet.Generate(photoSet, thumbsDir)
+		contactsheet.Generate(photoSet, thumbsDir, title)
 		os.Exit(0)
 	}
 
