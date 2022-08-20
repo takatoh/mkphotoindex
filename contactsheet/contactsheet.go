@@ -25,7 +25,7 @@ func Generate(imageFiles *core.PhotoSet, thumbsDir string) {
 	pdf.AddPage()
 
 	// Draw grid
-	drawGrid(&pdf, &A4)
+	//drawGrid(&pdf, &A4)
 
 	// Font
 	err := pdf.AddTTFFont("IPAex", "ipaexg.ttf")
