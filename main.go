@@ -72,6 +72,10 @@ Options:
 		thumbsDir = contactsheet.MakeDirectory(dir)
 		photoSet = thumbnail.MakeThumbnails(imgFiles, thumbsDir, 200)
 		contactsheet.Generate(photoSet, thumbsDir, title)
+		err := os.RemoveAll(thumbsDir)
+		if err != nil {
+			panic(err)
+		}
 		os.Exit(0)
 	}
 
