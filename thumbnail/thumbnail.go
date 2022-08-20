@@ -13,11 +13,11 @@ import (
 	"github.com/takatoh/mkphotoindex/core"
 )
 
-func MakeThumbnails(imgFiles []string, dir string, opt_size uint) *core.PhotoSet {
+func MakeThumbnails(imgFiles []string, thumbsDir string, opt_size uint) *core.PhotoSet {
 	var photos []*core.Photo
 
 	for _, imgFile := range imgFiles {
-		thumb := MakeThumbnail(imgFile, dir, opt_size)
+		thumb := MakeThumbnail(imgFile, thumbsDir, opt_size)
 		filename := filepath.Base(imgFile)
 		ext := filepath.Ext(filename)
 		caption := strings.Replace(filename, ext, "", 1)
@@ -28,7 +28,7 @@ func MakeThumbnails(imgFiles []string, dir string, opt_size uint) *core.PhotoSet
 	return photoSet
 }
 
-func MakeThumbnail(srcfile, dir string, size uint) string {
+func MakeThumbnail(srcfile, thumbsDir string, size uint) string {
 	src, _ := os.Open(srcfile)
 	defer src.Close()
 
@@ -44,11 +44,7 @@ func MakeThumbnail(srcfile, dir string, size uint) string {
 	}
 	filename := filepath.Base(srcfile)
 	var thumbFile string
-	if dir != "" {
-		thumbFile = dir + "/thumbs/thumb_" + filename
-	} else {
-		thumbFile = "thumbs/thumb_" + filename
-	}
+	thumbFile = thumbsDir + "/thumb_" + filename
 	thumb, _ := os.Create(thumbFile)
 	ext := strings.ToLower(filepath.Ext(filename))
 	if ext == ".jpg" || ext == ".jpeg" {
