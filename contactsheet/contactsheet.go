@@ -27,13 +27,6 @@ func Generate(imageFiles *core.PhotoSet, thumbsDir string) {
 		panic(err)
 	}
 
-	//var imageFiles = []string{
-	//	"./photos/thumbs/thumb_01_1024768.jpg",
-	//	"./photos/thumbs/thumb_01_12801024.jpg",
-	//	"./photos/thumbs/thumb_01_19201080.jpg",
-	//	"./photos/thumbs/thumb_01_19201200.jpg",
-	//}
-
 	// Drow images
 	for i, img := range imageFiles.Photos {
 		x := 100.0 + 150.0*float64(i%3)
