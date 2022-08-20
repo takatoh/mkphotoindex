@@ -34,7 +34,6 @@ Options:
 		os.Exit(0)
 	}
 
-	//	var photos []*core.Photo
 	var imgFiles []string
 	var dir string
 	var pattern string
@@ -80,15 +79,6 @@ Options:
 		fmt.Println(err)
 	}
 
-	//	for _, imgFile := range imgFiles {
-	//		thumb := thumbnail.MakeThumbnail(imgFile, dir, *opt_size)
-	//		filename := filepath.Base(imgFile)
-	//		ext := filepath.Ext(filename)
-	//		caption := strings.Replace(filename, ext, "", 1)
-	//		photos = append(photos, core.NewPhoto(filename, thumb, caption))
-	//	}
-
-	//	photoSet := core.NewPhotoSet(photos, *opt_size)
 	photoSet := thumbnail.MakeThumbnails(imgFiles, dir, *opt_size)
 
 	err = html.MakeIndex(w, photoSet)
@@ -96,39 +86,6 @@ Options:
 		panic(err)
 	}
 }
-
-//func makeThumbnail(srcfile, dir string, size uint) string {
-//	src, _ := os.Open(srcfile)
-//	defer src.Close()
-//
-//	config, _, _ := image.DecodeConfig(src)
-//	src.Seek(0, 0)
-//	img, _, _ := image.Decode(src)
-//
-//	var resizedImg image.Image
-//	if config.Width >= config.Height {
-//		resizedImg = resize.Resize(size, 0, img, resize.Lanczos3)
-//	} else {
-//		resizedImg = resize.Resize(0, size, img, resize.Lanczos3)
-//	}
-//	filename := filepath.Base(srcfile)
-//	var thumbFile string
-//	if dir != "" {
-//		thumbFile = dir + "/thumbs/thumb_" + filename
-//	} else {
-//		thumbFile = "thumbs/thumb_" + filename
-//	}
-//	thumb, _ := os.Create(thumbFile)
-//	ext := strings.ToLower(filepath.Ext(filename))
-//	if ext == ".jpg" || ext == ".jpeg" {
-//		jpeg.Encode(thumb, resizedImg, nil)
-//	} else {
-//		png.Encode(thumb, resizedImg)
-//	}
-//	thumb.Close()
-//
-//	return "thumbs/thumb_" + filename
-//}
 
 func contains(s []string, e string) bool {
 	for _, v := range s {
