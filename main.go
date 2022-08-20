@@ -3,17 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
-	"image"
-	"image/jpeg"
-	"image/png"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/nfnt/resize"
-
 	"github.com/takatoh/mkphotoindex/core"
 	"github.com/takatoh/mkphotoindex/html"
+	"github.com/takatoh/mkphotoindex/thumbnail"
 )
 
 const (
@@ -86,7 +82,7 @@ Options:
 	}
 
 	for _, imgFile := range imgFiles {
-		thumb := makeThumbnail(imgFile, dir, *opt_size)
+		thumb := thumbnail.MakeThumbnail(imgFile, dir, *opt_size)
 		filename := filepath.Base(imgFile)
 		ext := filepath.Ext(filename)
 		caption := strings.Replace(filename, ext, "", 1)
@@ -101,38 +97,38 @@ Options:
 	}
 }
 
-func makeThumbnail(srcfile, dir string, size uint) string {
-	src, _ := os.Open(srcfile)
-	defer src.Close()
-
-	config, _, _ := image.DecodeConfig(src)
-	src.Seek(0, 0)
-	img, _, _ := image.Decode(src)
-
-	var resizedImg image.Image
-	if config.Width >= config.Height {
-		resizedImg = resize.Resize(size, 0, img, resize.Lanczos3)
-	} else {
-		resizedImg = resize.Resize(0, size, img, resize.Lanczos3)
-	}
-	filename := filepath.Base(srcfile)
-	var thumbFile string
-	if dir != "" {
-		thumbFile = dir + "/thumbs/thumb_" + filename
-	} else {
-		thumbFile = "thumbs/thumb_" + filename
-	}
-	thumb, _ := os.Create(thumbFile)
-	ext := strings.ToLower(filepath.Ext(filename))
-	if ext == ".jpg" || ext == ".jpeg" {
-		jpeg.Encode(thumb, resizedImg, nil)
-	} else {
-		png.Encode(thumb, resizedImg)
-	}
-	thumb.Close()
-
-	return "thumbs/thumb_" + filename
-}
+//func makeThumbnail(srcfile, dir string, size uint) string {
+//	src, _ := os.Open(srcfile)
+//	defer src.Close()
+//
+//	config, _, _ := image.DecodeConfig(src)
+//	src.Seek(0, 0)
+//	img, _, _ := image.Decode(src)
+//
+//	var resizedImg image.Image
+//	if config.Width >= config.Height {
+//		resizedImg = resize.Resize(size, 0, img, resize.Lanczos3)
+//	} else {
+//		resizedImg = resize.Resize(0, size, img, resize.Lanczos3)
+//	}
+//	filename := filepath.Base(srcfile)
+//	var thumbFile string
+//	if dir != "" {
+//		thumbFile = dir + "/thumbs/thumb_" + filename
+//	} else {
+//		thumbFile = "thumbs/thumb_" + filename
+//	}
+//	thumb, _ := os.Create(thumbFile)
+//	ext := strings.ToLower(filepath.Ext(filename))
+//	if ext == ".jpg" || ext == ".jpeg" {
+//		jpeg.Encode(thumb, resizedImg, nil)
+//	} else {
+//		png.Encode(thumb, resizedImg)
+//	}
+//	thumb.Close()
+//
+//	return "thumbs/thumb_" + filename
+//}
 
 func contains(s []string, e string) bool {
 	for _, v := range s {
