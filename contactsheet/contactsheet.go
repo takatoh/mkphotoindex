@@ -21,7 +21,7 @@ const (
 	captionY    = 95.0
 )
 
-func Generate(imageFiles *core.PhotoSet, thumbsDir string) {
+func Generate(imageFiles *core.PhotoSet, thumbsDir string, title string) {
 	pdf := gopdf.GoPdf{}
 
 	A4 := *gopdf.PageSizeA4
@@ -40,7 +40,7 @@ func Generate(imageFiles *core.PhotoSet, thumbsDir string) {
 
 	// Title
 	pdf.SetFont("IPAex", "", 24)
-	drawText(&pdf, 60, 25, "Index of photos")
+	drawText(&pdf, 60, 25, title)
 
 	// Drow images
 	pages, totalPage := paginate(imageFiles.Photos, defaultRows*defaultCols)
