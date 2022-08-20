@@ -1,12 +1,16 @@
 package contactsheet
 
 import (
+	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/signintech/gopdf"
+
+	"github.com/takatoh/mkphotoindex/core"
 )
 
-func Generate() {
+func Generate(imageFiles *core.PhotoSet, thumbsDir string) {
 	pdf := gopdf.GoPdf{}
 
 	A4 := *gopdf.PageSizeA4
@@ -23,20 +27,21 @@ func Generate() {
 		panic(err)
 	}
 
-	var imageFiles = []string{
-		"./photos/thumbs/thumb_01_1024768.jpg",
-		"./photos/thumbs/thumb_01_12801024.jpg",
-		"./photos/thumbs/thumb_01_19201080.jpg",
-		"./photos/thumbs/thumb_01_19201200.jpg",
-	}
+	//var imageFiles = []string{
+	//	"./photos/thumbs/thumb_01_1024768.jpg",
+	//	"./photos/thumbs/thumb_01_12801024.jpg",
+	//	"./photos/thumbs/thumb_01_19201080.jpg",
+	//	"./photos/thumbs/thumb_01_19201200.jpg",
+	//}
 
 	// Drow images
-	for i, file := range imageFiles {
+	for i, img := range imageFiles.Photos {
 		x := 100.0 + 150.0*float64(i%3)
 		y := 50.0 + 150.0*float64((i/3))
-		drawImage(&pdf, x, y, file)
+		thumb := strings.Replace(img.Thumb, "thumbs", thumbsDir, 1)
+		drawImage(&pdf, x, y, thumb)
 		pdf.SetFont("Arial", "", 10)
-		basename := filepath.Base(file)
+		basename := filepath.Base(img.File)
 		drawText(&pdf, x, y+120.0, basename)
 	}
 
@@ -69,4 +74,19 @@ func drawGrid(pdf *gopdf.GoPdf, page *gopdf.Rect) {
 		pdf.Line(x, 0, x, page.H)
 		pdf.Line(0, y, page.W, y)
 	}
+}
+
+func MakeDirectory(baseDir string) string {
+	var thumbsDir string
+
+	if baseDir != "" {
+		thumbsDir = baseDir + "/_csheet_thumbs"
+	} else {
+		thumbsDir = "_csheet_thumbs"
+	}
+	if _, err := os.Stat(thumbsDir); os.IsNotExist(err) {
+		os.Mkdir(thumbsDir, 0777)
+	}
+
+	return thumbsDir
 }
