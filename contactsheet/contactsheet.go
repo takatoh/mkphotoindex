@@ -6,7 +6,7 @@ import (
 	"github.com/signintech/gopdf"
 )
 
-func main() {
+func Generate() {
 	pdf := gopdf.GoPdf{}
 
 	A4 := *gopdf.PageSizeA4
