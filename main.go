@@ -43,13 +43,9 @@ Options:
 
 	if flag.NArg() > 0 {
 		dir = flag.Arg(0)
-	} else {
-		dir = ""
-	}
-
-	if dir != "" {
 		pattern = dir + "/*.*"
 	} else {
+		dir = ""
 		pattern = "*.*"
 	}
 
