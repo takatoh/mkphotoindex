@@ -7,7 +7,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/takatoh/mkphotoindex/core"
 	"github.com/takatoh/mkphotoindex/html"
 	"github.com/takatoh/mkphotoindex/thumbnail"
 )
@@ -35,7 +34,7 @@ Options:
 		os.Exit(0)
 	}
 
-	var photos []*core.Photo
+	//	var photos []*core.Photo
 	var imgFiles []string
 	var dir string
 	var pattern string
@@ -81,15 +80,16 @@ Options:
 		fmt.Println(err)
 	}
 
-	for _, imgFile := range imgFiles {
-		thumb := thumbnail.MakeThumbnail(imgFile, dir, *opt_size)
-		filename := filepath.Base(imgFile)
-		ext := filepath.Ext(filename)
-		caption := strings.Replace(filename, ext, "", 1)
-		photos = append(photos, core.NewPhoto(filename, thumb, caption))
-	}
+	//	for _, imgFile := range imgFiles {
+	//		thumb := thumbnail.MakeThumbnail(imgFile, dir, *opt_size)
+	//		filename := filepath.Base(imgFile)
+	//		ext := filepath.Ext(filename)
+	//		caption := strings.Replace(filename, ext, "", 1)
+	//		photos = append(photos, core.NewPhoto(filename, thumb, caption))
+	//	}
 
-	photoSet := core.NewPhotoSet(photos, *opt_size)
+	//	photoSet := core.NewPhotoSet(photos, *opt_size)
+	photoSet := thumbnail.MakeThumbnails(imgFiles, dir, *opt_size)
 
 	err = html.MakeIndex(w, photoSet)
 	if err != nil {

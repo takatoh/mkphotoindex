@@ -9,7 +9,24 @@ import (
 	"strings"
 
 	"github.com/nfnt/resize"
+
+	"github.com/takatoh/mkphotoindex/core"
 )
+
+func MakeThumbnails(imgFiles []string, dir string, opt_size uint) *core.PhotoSet {
+	var photos []*core.Photo
+
+	for _, imgFile := range imgFiles {
+		thumb := MakeThumbnail(imgFile, dir, opt_size)
+		filename := filepath.Base(imgFile)
+		ext := filepath.Ext(filename)
+		caption := strings.Replace(filename, ext, "", 1)
+		photos = append(photos, core.NewPhoto(filename, thumb, caption))
+	}
+
+	photoSet := core.NewPhotoSet(photos, opt_size)
+	return photoSet
+}
 
 func MakeThumbnail(srcfile, dir string, size uint) string {
 	src, _ := os.Open(srcfile)
