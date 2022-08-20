@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	defaultCols = 3
-	defaultRows = 4
+	defaultCols = 4
+	defaultRows = 6
 )
 
 func Generate(imageFiles *core.PhotoSet, thumbsDir string) {
@@ -35,19 +35,26 @@ func Generate(imageFiles *core.PhotoSet, thumbsDir string) {
 
 	// Title
 	pdf.SetFont("IPAex", "", 24)
-	drawText(&pdf, 100, 25, "Index of photos")
+	drawText(&pdf, 60, 25, "Index of photos")
 
 	// Drow images
+	marginLeft := 60.0
+	marginTop := 65.0
+	strideX := 128.0
+	strideY := 122.0
+	captionY := 95.0
 	pages, totalPage := paginate(imageFiles.Photos, defaultRows*defaultCols)
 	for j, page := range pages {
 		for i, img := range page {
-			x := 100.0 + 150.0*float64(i%defaultCols)
-			y := 80.0 + 150.0*float64((i/defaultCols))
+			x := marginLeft + strideX*float64(i%defaultCols)
+			y := marginTop + strideY*float64((i/defaultCols))
+			drawBorder(&pdf, x-3, y-3, 118.0, 115.0)
 			thumb := strings.Replace(img.Thumb, "thumbs", thumbsDir, 1)
 			drawImage(&pdf, x, y, thumb)
-			pdf.SetFont("IPAex", "", 10)
 			basename := filepath.Base(img.File)
-			drawText(&pdf, x, y+120.0, basename)
+			pdf.SetFont("IPAex", "", 8)
+			pdf.SetFillColor(0, 0, 0)
+			drawText(&pdf, x, y+captionY, basename)
 		}
 		pdf.SetFont("IPAex", "", 12)
 		drawText(&pdf, 265, 800, "page "+strconv.Itoa(j+1)+" of "+strconv.Itoa(totalPage))
@@ -69,6 +76,14 @@ func drawText(pdf *gopdf.GoPdf, x float64, y float64, s string) {
 
 func drawImage(pdf *gopdf.GoPdf, x float64, y float64, filename string) {
 	pdf.Image(filename, x, y, nil)
+}
+
+func drawBorder(pdf *gopdf.GoPdf, x float64, y float64, w float64, h float64) error {
+	pdf.SetStrokeColor(196, 196, 196)
+	pdf.SetLineWidth(0.6)
+	pdf.SetFillColor(255, 255, 255)
+	err := pdf.Rectangle(x, y, x+w, y+h, "DF", 3, 10)
+	return err
 }
 
 func drawGrid(pdf *gopdf.GoPdf, page *gopdf.Rect) {

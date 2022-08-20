@@ -63,7 +63,7 @@ Options:
 
 	if *opt_csheet {
 		thumbsDir = contactsheet.MakeDirectory(dir)
-		photoSet = thumbnail.MakeThumbnails(imgFiles, thumbsDir, 240)
+		photoSet = thumbnail.MakeThumbnails(imgFiles, thumbsDir, 200)
 		contactsheet.Generate(photoSet, thumbsDir)
 		os.Exit(0)
 	}
