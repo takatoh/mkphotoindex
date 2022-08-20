@@ -22,18 +22,22 @@ func Generate(imageFiles *core.PhotoSet, thumbsDir string) {
 	drawGrid(&pdf, &A4)
 
 	// Font
-	err := pdf.AddTTFFont("Arial", "C:/windows/fonts/arial.ttf")
+	err := pdf.AddTTFFont("IPAex", "ipaexg.ttf")
 	if err != nil {
 		panic(err)
 	}
 
+	// Title
+	pdf.SetFont("IPAex", "", 24)
+	drawText(&pdf, 100, 25, "Index of photos")
+
 	// Drow images
 	for i, img := range imageFiles.Photos {
 		x := 100.0 + 150.0*float64(i%3)
-		y := 50.0 + 150.0*float64((i/3))
+		y := 80.0 + 150.0*float64((i/3))
 		thumb := strings.Replace(img.Thumb, "thumbs", thumbsDir, 1)
 		drawImage(&pdf, x, y, thumb)
-		pdf.SetFont("Arial", "", 10)
+		pdf.SetFont("IPAex", "", 10)
 		basename := filepath.Base(img.File)
 		drawText(&pdf, x, y+120.0, basename)
 	}
