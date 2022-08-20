@@ -45,3 +45,15 @@ func MakeIndex(file *os.File, photoSet *core.PhotoSet) error {
 	err := t.ExecuteTemplate(file, "index", photoSet)
 	return err
 }
+
+func IndexFilePath(baseDir string) string {
+	var indexFile string
+
+	if baseDir != "" {
+		indexFile = baseDir + "/index.html"
+	} else {
+		indexFile = "index.html"
+	}
+
+	return indexFile
+}
