@@ -63,6 +63,7 @@ Options:
 	}
 
 	if *opt_csheet {
+		// Generate contact sheet
 		var title string
 		if *opt_title != "" {
 			title = *opt_title
@@ -76,22 +77,19 @@ Options:
 		if err != nil {
 			panic(err)
 		}
-		os.Exit(0)
-	}
-
-	thumbsDir = thumbnail.MakeDirectory(dir)
-
-	indexFile = html.IndexFilePath(dir)
-	w, err := os.OpenFile(indexFile, os.O_WRONLY|os.O_CREATE, 0600)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	photoSet = thumbnail.MakeThumbnails(imgFiles, thumbsDir, *opt_size)
-
-	err = html.MakeIndex(w, photoSet)
-	if err != nil {
-		panic(err)
+	} else {
+		// Or generate index.html
+		thumbsDir = thumbnail.MakeDirectory(dir)
+		photoSet = thumbnail.MakeThumbnails(imgFiles, thumbsDir, *opt_size)
+		indexFile = html.IndexFilePath(dir)
+		w, err := os.OpenFile(indexFile, os.O_WRONLY|os.O_CREATE, 0600)
+		if err != nil {
+			fmt.Println(err)
+		}
+		err = html.MakeIndex(w, photoSet)
+		if err != nil {
+			panic(err)
+		}
 	}
 }
 
