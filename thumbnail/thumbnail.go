@@ -57,13 +57,13 @@ func MakeThumbnail(srcfile, thumbsDir string, size uint) string {
 	return "thumbs/thumb_" + filename
 }
 
-func MakeDirectory(baseDir string) string {
+func MakeDirectory(baseDir string, thumbsDirName string) string {
 	var thumbsDir string
 
 	if baseDir != "" {
-		thumbsDir = baseDir + "/thumbs"
+		thumbsDir = baseDir + "/" + thumbsDirName
 	} else {
-		thumbsDir = "thumbs"
+		thumbsDir = thumbsDirName
 	}
 	if _, err := os.Stat(thumbsDir); os.IsNotExist(err) {
 		os.Mkdir(thumbsDir, 0777)

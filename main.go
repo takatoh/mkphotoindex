@@ -79,7 +79,7 @@ Options:
 		}
 	} else {
 		// Or generate index.html
-		thumbsDir = thumbnail.MakeDirectory(dir)
+		thumbsDir = thumbnail.MakeDirectory(dir, "thumbs")
 		photoSet = thumbnail.MakeThumbnails(imgFiles, thumbsDir, *opt_size)
 		indexFile = html.IndexFilePath(dir)
 		w, err := os.OpenFile(indexFile, os.O_WRONLY|os.O_CREATE, 0600)
