@@ -1,7 +1,6 @@
 package contactsheet
 
 import (
-	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -100,21 +99,6 @@ func drawGrid(pdf *gopdf.GoPdf, page *gopdf.Rect) {
 		pdf.Line(x, 0, x, page.H)
 		pdf.Line(0, y, page.W, y)
 	}
-}
-
-func MakeDirectory(baseDir string) string {
-	var thumbsDir string
-
-	if baseDir != "" {
-		thumbsDir = baseDir + "/_csheet_thumbs"
-	} else {
-		thumbsDir = "_csheet_thumbs"
-	}
-	if _, err := os.Stat(thumbsDir); os.IsNotExist(err) {
-		os.Mkdir(thumbsDir, 0777)
-	}
-
-	return thumbsDir
 }
 
 func paginate(photos []*core.Photo, parPage int) ([][]*core.Photo, int) {
