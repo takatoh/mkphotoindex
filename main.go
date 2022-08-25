@@ -70,7 +70,7 @@ Options:
 		} else {
 			title = dir
 		}
-		thumbsDir = contactsheet.MakeDirectory(dir)
+		thumbsDir = thumbnail.MakeDirectory(dir, "_csheet_thumbs")
 		photoSet = thumbnail.MakeThumbnails(imgFiles, thumbsDir, 200)
 		contactsheet.Generate(photoSet, thumbsDir, title)
 		err := os.RemoveAll(thumbsDir)
